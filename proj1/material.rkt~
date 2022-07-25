@@ -1,0 +1,69 @@
+#lang typed/racket
+
+;; CMSC 15100 Winter 2022
+;; Project 1
+;; material.rkt module
+;; <YOUR NAME>
+;;
+;; This module contains the definition of the Hit and Material types
+;;
+
+;; load custom definitions
+;;
+(require "../include/cs151-core.rkt")
+
+;; load image library definitions
+;;
+(require "../include/cs151-image.rkt")
+
+;; load testing infrastructure
+;;
+(require typed/test-engine/racket-tests)
+
+;; project modules
+;;
+(require "util.rkt")
+(require "math-util.rkt")
+(require "color.rkt")
+
+;; A (Reflect-Info rgb vec) value represents the information about a ray's
+;; hit on the surface of an object.  The rgb value is the attenuation factor
+;; and the ray is the reflection/scatter ray for the surface
+(define-struct Reflect-Info
+  ([aten : RGB]             ;; attenuation factor
+   [reflect-ray : Ray]))    ;; ray that is scattered or reflected from surface
+
+;; A Scatter-Fun is a function that takes a Ray, intersection position,
+;; and surface normal, and returns optional reflection information for
+;; the given inputs.  The function returns `None when there is not color
+;; contribution and some reflection info otherwise.
+(define-type Scatter-Fun (Ray Float3 Float3 -> (Option Reflect-Info)))
+
+;; A Material is a struct containing a scatter function.
+;;
+(define-struct Material
+  ([scatter : Scatter-Fun]))
+
+(: make-reflect-info : RGB Ray -> (Option Reflect-Info))
+;; helper function that builds some reflection info
+(define (make-reflect-info rgb ray) (Some (Reflect-Info rgb ray)))
+
+(: flat-material : RGB -> Material)
+;; flat shading with the given color
+(define (flat-material rgb)
+  (Material
+   (lambda ([ray : Ray] [pt : Float3] [norm : Float3])
+     (make-reflect-info rgb (Ray fl3-zero fl3-zero)))))
+
+;; a flat black material for creating test Hit values
+(define flat-black : Material (flat-material rgb-black))
+
+;;;;;;;;;;
+;; Exports
+;;;;;;;;;;
+
+(provide (struct-out Reflect-Info)
+         (struct-out Material))
+
+(provide flat-material
+         flat-black)

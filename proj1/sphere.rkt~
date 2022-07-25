@@ -1,0 +1,40 @@
+#lang typed/racket
+
+;; CMSC 15100 Winter 2022
+;; Project 1
+;; sphere.rkt module
+;; <YOUR NAME>
+;;
+;; This module contains the implementation of the sphere object
+;;
+
+;; load custom definitions
+;;
+(require "../include/cs151-core.rkt")
+
+;; load image library definitions
+;;
+(require "../include/cs151-image.rkt")
+
+;; load testing infrastructure
+;;
+(require typed/test-engine/racket-tests)
+
+;; project modules
+;;
+(require "util.rkt")
+(require "math-util.rkt")
+(require "material.rkt")
+(require "hit.rkt")
+(require "object.rkt")
+
+(: make-sphere : Float3 Float Material -> Object)
+;; make a sphere object with the given center, radius, and material
+(define (make-sphere center radius material)
+  empty-object)
+
+;;;;;;;;;;
+;; Exports
+;;;;;;;;;;
+
+(provide make-sphere)
